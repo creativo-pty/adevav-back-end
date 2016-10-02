@@ -18,6 +18,10 @@ services:
     depends_on:
       - 'mysql'
     command: 'sleep infinity'
+  website:
+    image: creativopty/adevav-front-end:latest
+    ports:
+      - 80:80
   mysql:
     image: 'mysql:5.5'
     ports:

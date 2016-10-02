@@ -11,6 +11,7 @@
     "docker:rm": "docker-compose -f docker-compose.yml rm",
     "docker:start": "docker-compose -f docker-compose.yml up -d",
     "docker:stop": "docker-compose -f docker-compose.yml kill",
+    "docker:update": "docker pull creativopty/adevav-front-end; docker pull mysql:5.5",
     "migrate:down": "scripts/migrate --down | node_modules/.bin/bunyan",
     "migrate:up": "scripts/migrate --up | node_modules/.bin/bunyan",
     "db:migrate:down": "scripts/migrate --down | node_modules/.bin/bunyan",
