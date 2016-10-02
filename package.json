@@ -1,0 +1,62 @@
+{
+  "name": "adevav-back-end",
+  "version": "0.1.0",
+  "description": "This is the code that powers the ADEVAV website back-end.",
+  "main": "index.js",
+  "scripts": {
+    "precoverage": "NODE_ENV=test scripts/create_test_database && NODE_ENV=test node scripts/migrate --up | node_modules/.bin/bunyan",
+    "coverage": "NODE_ENV=test ./node_modules/lab/bin/lab -C -l -L -M 30000 -r html -o ./coverage/index.html -r console -o stdout",
+    "coverage:open": "scripts/open_coverage",
+    "docker:kill": "npm run docker:stop && npm run docker:rm",
+    "docker:rm": "docker-compose -f docker-compose.yml rm",
+    "docker:start": "docker-compose -f docker-compose.yml up -d",
+    "docker:stop": "docker-compose -f docker-compose.yml kill",
+    "migrate:down": "scripts/migrate --down | node_modules/.bin/bunyan",
+    "migrate:up": "scripts/migrate --up | node_modules/.bin/bunyan",
+    "db:migrate:down": "scripts/migrate --down | node_modules/.bin/bunyan",
+    "start": "node index.js | node_modules/.bin/bunyan",
+    "test": "NODE_ENV=test scripts/run_tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativo-pty/adevav-back-end.git"
+  },
+  "keywords": [
+    "adevav",
+    "back-end",
+    "hapi"
+  ],
+  "author": "Christopher Duncan <cj.duncan.a@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cjduncana/adevav-back-end/issues"
+  },
+  "homepage": "http://github.com/cjduncana/adevav-back-end#readme",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "boom": "^4.0.0",
+    "bunyan": "^1.8.1",
+    "commander": "^2.9.0",
+    "error-factory": "^0.1.6",
+    "fs": "0.0.1-security",
+    "hapi": "^15.0.3",
+    "hapi-auth-jwt2": "^5.4.1",
+    "hapi-swagger": "^7.2.0",
+    "inert": "^4.0.2",
+    "joi": "^9.0.4",
+    "jsonwebtoken": "^7.1.9",
+    "lodash": "^4.15.0",
+    "moment": "^2.15.1",
+    "mysql": "^2.11.1",
+    "path": "^0.12.7",
+    "sequelize": "^3.24.1",
+    "umzug": "^1.11.0",
+    "vision": "^4.1.0"
+  },
+  "devDependencies": {
+    "code": "^3.0.2",
+    "lab": "^11.0.1",
+    "open": "0.0.5",
+    "sinon": "^1.17.5"
+  }
+}

@@ -1,0 +1,27 @@
+version: '2'
+services:
+  server:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - '3001:3001'
+    environment:
+      DB_USER: 'root'
+      DB_PASSWORD: 'adevav_2016'
+      DB_NAME: 'adevav'
+      DB_HOST: 'mysql'
+    links:
+      - 'mysql'
+    volumes:
+      - './:/app'
+    depends_on:
+      - 'mysql'
+    command: 'sleep infinity'
+  mysql:
+    image: 'mysql:5.5'
+    ports:
+      - '3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=adevav_2016
+      - MYSQL_DATABASE=adevav
