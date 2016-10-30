@@ -1,0 +1,25 @@
+sudo: required
+
+services:
+- docker
+
+env:
+  DOCKER_COMPOSE_VERSION: 1.7.1
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - npm run docker:update
+  - npm run docker:start
+  - docker exec -it `docker ps | grep adevavbackend_server_1 | awk '{print $1}'` bash
+
+script:
+  - npm test
+  - npm run coverage
+
+language: node_js
+
+node_js:
+  - "node"
