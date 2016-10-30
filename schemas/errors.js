@@ -4,6 +4,10 @@ const Joi = require('joi');
 
 const Errors = {};
 
+function badRequestError(message, label) {
+  return boomError(400, 'Bad Request', message, label);
+}
+
 function boomError(statusCode, name, message, label) {
   return Joi.object().keys({
     statusCode: Joi.number().required()
@@ -21,7 +25,19 @@ function boomError(statusCode, name, message, label) {
   }).label(label);
 }
 
+function conflictError(message, label) {
+  return boomError(409, 'Conflict', message, label);
+}
+
 // Application Errors
+Errors.AuthenticationError = boomError(401, 'Unauthorized', 'Invalid credentials', 'AuthenticationError');
+Errors.ForbiddenError = boomError(403, 'Forbidden', 'You are not allowed to use this resource.', 'ForbiddenError');
 Errors.InternalServerError = boomError(500, 'Internal Server Error', 'An uknown error has occured. Please try again later.', 'InternalServerError');
+
+// Bad Request Errors
+Errors.BadRequestUserError = badRequestError('child "Email Address" fails because ["Email Address" is required]', 'BadRequestUserError');
+
+// Conflict Errors
+Errors.ExistingUserError = conflictError('User already exist', 'ExistingUserError');
 
 module.exports = Errors;
