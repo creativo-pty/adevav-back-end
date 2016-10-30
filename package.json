@@ -7,6 +7,7 @@
     "precoverage": "NODE_ENV=test scripts/create_test_database && NODE_ENV=test node scripts/migrate --up | node_modules/.bin/bunyan",
     "coverage": "NODE_ENV=test ./node_modules/lab/bin/lab -C -l -L -M 30000 -r html -o ./coverage/index.html -r console -o stdout",
     "coverage:open": "scripts/open_coverage",
+    "docker:bash": "docker exec -it `docker ps | grep server_server | awk '{print $1}'` bash",
     "docker:kill": "npm run docker:stop && npm run docker:rm",
     "docker:rm": "docker-compose -f docker-compose.yml rm",
     "docker:start": "docker-compose -f docker-compose.yml up -d",
@@ -34,6 +35,7 @@
   },
   "homepage": "http://github.com/cjduncana/adevav-back-end#readme",
   "dependencies": {
+    "bcryptjs": "^2.3.0",
     "bluebird": "^3.4.6",
     "boom": "^4.0.0",
     "bunyan": "^1.8.1",
@@ -52,6 +54,7 @@
     "path": "^0.12.7",
     "sequelize": "^3.24.1",
     "umzug": "^1.11.0",
+    "uuid": "^2.0.3",
     "vision": "^4.1.0"
   },
   "devDependencies": {
