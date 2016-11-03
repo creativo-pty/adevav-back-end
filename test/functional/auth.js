@@ -75,7 +75,6 @@ describe('Authentication resources', () => {
           token: result.token,
           user: {
             id: userInstance.id,
-            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
