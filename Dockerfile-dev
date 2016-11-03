@@ -1,5 +1,4 @@
 FROM node:6.2.0
-RUN apt-get update && apt-get upgrade -y
 
 # Set environment variables
 ENV appDir /app
@@ -16,7 +15,10 @@ RUN npm i --production
 # Add app files
 ADD . /app
 
+# Install dev dependencies
+RUN apt-get update && apt-get upgrade -y && apt-get install -y  mysql-client
+
 #Expose the port
 EXPOSE 3001
 
-ENTRYPOINT npm run production
+ENTRYPOINT sleep infinity
