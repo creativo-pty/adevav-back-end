@@ -15,12 +15,18 @@ exports.lab = Lab.script();
 const server = Server.server;
 
 describe('Authentication resources', () => {
+  let validTokens = [];
 
   before((done) => {
     Server.initialize()
     .then(() => {
       User = server.models.User;
 
+      return logIn();
+    })
+
+    .then((tokens) => {
+      validTokens = tokens;
       return done();
     })
 
@@ -200,6 +206,117 @@ describe('Authentication resources', () => {
 
         User.getUserByEmail.restore();
         return done();
+      });
+    });
+  });
+
+  describe('GET /auth/scope', () => {
+
+    function callServer(token, test) {
+      return server.inject({
+        method: 'GET',
+        url: '/auth/scope',
+        headers: {
+          Authorization: token
+        }
+      }, test);
+    }
+
+    it('should return a newly created User when this endpoint is used correctly', (done) => {
+      return callServer(validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+        expect(statusCode).to.equal(200);
+        expect(statusMessage).to.equal('OK');
+        expect(result).to.equal({
+          users: ['create']
+        });
+        return done();
+      });
+    });
+
+    describe('user authorization', () => {
+
+      it('should return a 200 OK if the User is an Administrator', (done) => {
+        return callServer(validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            users: ['create']
+          });
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is a Subscriber', (done) => {
+        return callServer(validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            users: []
+          });
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is a Contributor', (done) => {
+        return callServer(validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            users: []
+          });
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is a Author', (done) => {
+        return callServer(validTokens['Author'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            users: []
+          });
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is a Editor', (done) => {
+        return callServer(validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            users: []
+          });
+          return done();
+        });
+      });
+
+      it('should return a 401 Unauthorized if the token is missing', (done) => {
+        return callServer(null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(401);
+          expect(statusMessage).to.equal('Unauthorized');
+          expect(result).to.equal({
+            statusCode: 401,
+            error: 'Unauthorized',
+            message: 'Missing authentication'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 401 Unauthorized if the token is invalid', (done) => {
+        return callServer(invalidToken(), ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(401);
+          expect(statusMessage).to.equal('Unauthorized');
+          expect(result).to.equal({
+            statusCode: 401,
+            error: 'Unauthorized',
+            message: 'Invalid credentials',
+            attributes: {
+              error: 'Invalid credentials'
+            }
+          });
+          return done();
+        });
       });
     });
   });
