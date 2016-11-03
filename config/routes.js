@@ -8,6 +8,8 @@ const Routes = {
   register: function(server, { pathToRoutes }, next) {
     fs.readdirSync(pathToRoutes).forEach((file) => {
       _.each(require(`${pathToRoutes}/${file}`), (route) => {
+
+        server.policies.register(route);
         server.bind(server);
         server.route(route);
       });

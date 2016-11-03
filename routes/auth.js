@@ -47,4 +47,38 @@ routes.push({
   }
 });
 
+// GET /auth/scope
+routes.push({
+  method: 'GET',
+  path: API_BASE_PATH + '/scope',
+  config: {
+    auth: 'jwt',
+    handler: Auth.scope,
+    description: 'List user permissions',
+    notes: 'Lists all the permission the currently logged in user has in the application',
+    plugins: {
+      'hapi-swagger': {
+        responses: {
+          '200': {
+            description: 'OK',
+            schema: SCHEMAS.AuthenticationScope
+          },
+          '401': {
+            description: 'Unauthorized',
+            schema: SCHEMAS.Errors.AuthenticationError
+          },
+          '500': {
+            description: 'Internal Server Error',
+            schema: SCHEMAS.Errors.InternalServerError
+          }
+        }
+      }
+    },
+    tags: ['api'],
+    validate: {
+      headers: SCHEMAS.AuthorizationToken.unknown()
+    }
+  }
+});
+
 module.exports = routes;

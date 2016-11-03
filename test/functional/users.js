@@ -309,7 +309,7 @@ describe('User resources', () => {
 
     describe('user authorization', () => {
 
-      it('should return a 200 Created if the User is an Administrator', (done) => {
+      it('should return a 201 Created if the User is an Administrator', (done) => {
         return callServer(validPayload, validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(201);
           expect(statusMessage).to.equal('Created');

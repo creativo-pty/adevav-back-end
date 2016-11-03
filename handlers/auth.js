@@ -24,3 +24,40 @@ exports.login = function({ payload }, reply) {
   })
   .catch(this.helpers.errorHandler.bind(this, reply));
 };
+
+exports.scope = function({ auth, policies }, reply) {
+  const allowedPolicies = {};
+
+  const role = auth.credentials.role;
+
+  for (const resource in policies) {
+    if (!allowedPolicies[resource]) {
+      allowedPolicies[resource] = [];
+    }
+
+    for (const name in policies[resource]) {
+      // Check first if role is denied
+      if (policies[resource][name].deny.includes(role)) {
+        continue;
+      }
+
+      const allowed = policies[resource][name].allow;
+
+      if (allowed.includes('*') || allowed.includes('all') || allowed.includes('any')) {
+        allowedPolicies[resource].push(name);
+        continue;
+      }
+
+      if (allowed.includes(role)) {
+        allowedPolicies[resource].push(name);
+        continue;
+      }
+
+      if (allowed.includes('self')) {
+        allowedPolicies[resource].push(`${name}:self`);
+      }
+    }
+  }
+
+  return reply(allowedPolicies).code(200);
+};
