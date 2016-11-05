@@ -5,8 +5,6 @@ const Boom = require('boom');
 const Errors = require('../lib/errors');
 const Formatters = require('../lib/formatters');
 
-const EXISTING_USER = Boom.conflict('User already exist');
-
 exports.listUsers = function({ headers }, reply) {
 
   let authParts = [];
@@ -46,6 +44,8 @@ exports.createUser = function({ payload }, reply) {
     return reply(Formatters.user(user)).code(201);
   })
 
-  .catch(Errors.ExistingUserError, () => reply(EXISTING_USER))
+  .catch(Errors.ExistingUserError, () => {
+    return reply(Boom.conflict('User already exist'));
+  })
   .catch(this.helpers.errorHandler.bind(this, reply));
 };
