@@ -112,7 +112,7 @@ module.exports = function(db) {
       },
 
       isValidPassword: function(password) {
-        return bcrypt.compareSync(password, this.password);
+        return this.password && bcrypt.compareSync(password, this.password);
       }
     },
 

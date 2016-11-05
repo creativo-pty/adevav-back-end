@@ -29,11 +29,7 @@ describe('Authentication resources', () => {
       validTokens = tokens;
       return done();
     })
-
-    .catch((err) => {
-      console.log(err);
-      return done(err);
-    });
+    .catch(done);
   });
 
   describe('POST /auth/login', () => {
@@ -44,6 +40,10 @@ describe('Authentication resources', () => {
       email: 'john.doe@example.com',
       password: 'strong.password'
     };
+    const invalidPayload = Object.assign({}, validPayload, {
+      email: 'new.john.doe@example.com',
+      password: 'password'
+    });
 
     function callServer(payload, test) {
       return server.inject({
@@ -55,11 +55,17 @@ describe('Authentication resources', () => {
 
     before((done) => {
       const sampleUser = Object.assign({}, UserFixture, validPayload);
+      const sampleUserWithoutPassword = Object.assign({}, UserFixture, invalidPayload, {
+        password: ''
+      });
 
-      User.createUser(sampleUser)
-      .then((user) => {
+      Promise.props({
+        user: User.createUser(sampleUser),
+        empty: User.createUser(sampleUserWithoutPassword)
+      })
+      .then(({ user, empty }) => {
         userInstance = user;
-        instances.push(user);
+        instances.push(user, empty);
 
         return done();
       })
@@ -102,6 +108,19 @@ describe('Authentication resources', () => {
           email: 'not.a.valid@email.com'
         });
 
+        return callServer(invalidPayload, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(401);
+          expect(statusMessage).to.equal('Unauthorized');
+          expect(result).to.equal({
+            statusCode: 401,
+            error: 'Unauthorized',
+            message: 'Invalid email or password'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 401 Unauthorized if the email address provided does not match any in the system', (done) => {
         return callServer(invalidPayload, ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(401);
           expect(statusMessage).to.equal('Unauthorized');
