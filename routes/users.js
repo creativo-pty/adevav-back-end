@@ -93,4 +93,117 @@ routes.push({
   }
 });
 
+// GET /users/{userId}
+routes.push({
+  method: 'GET',
+  path: API_BASE_PATH + '/{userId}',
+  config: {
+    auth: 'jwt',
+    handler: Users.getUser,
+    description: 'Get user by ID',
+    notes: 'Get a user in the system according to their ID',
+    plugins: {
+      'policy': {
+        resource: 'users',
+        name: 'view',
+        allow: ['Administrator', 'self']
+      },
+      'hapi-swagger': {
+        responses: {
+          '200': {
+            description: 'OK',
+            schema: SCHEMAS.User
+          },
+          '400': {
+            description: 'Bad Request',
+            schema: SCHEMAS.Errors.BadRequestIdError
+          },
+          '401': {
+            description: 'Unauthorized',
+            schema: SCHEMAS.Errors.AuthenticationError
+          },
+          '403': {
+            description: 'Forbidden',
+            schema: SCHEMAS.Errors.ForbiddenError
+          },
+          '404': {
+            description: 'Not Found',
+            schema: SCHEMAS.Errors.UserNotFoundError
+          },
+          '500': {
+            description: 'Internal Server Error',
+            schema: SCHEMAS.Errors.InternalServerError
+          }
+        }
+      }
+    },
+    tags: ['api'],
+    validate: {
+      headers: SCHEMAS.AuthorizationToken.unknown(),
+      params: {
+        userId: SCHEMAS.Uuid.userId
+      }
+    }
+  }
+});
+
+// PUT /users/{userId}
+routes.push({
+  method: 'PUT',
+  path: API_BASE_PATH + '/{userId}',
+  config: {
+    auth: 'jwt',
+    handler: Users.updateUser,
+    description: 'Update user by ID',
+    notes: 'Update a user in the system according to their ID',
+    plugins: {
+      'policy': {
+        resource: 'users',
+        name: 'update',
+        allow: ['Administrator', 'self']
+      },
+      'hapi-swagger': {
+        responses: {
+          '200': {
+            description: 'OK',
+            schema: SCHEMAS.User
+          },
+          '400': {
+            description: 'Bad Request',
+            schema: SCHEMAS.Errors.BadRequestUserError
+          },
+          '401': {
+            description: 'Unauthorized',
+            schema: SCHEMAS.Errors.AuthenticationError
+          },
+          '403': {
+            description: 'Forbidden',
+            schema: SCHEMAS.Errors.ForbiddenError
+          },
+          '404': {
+            description: 'Not Found',
+            schema: SCHEMAS.Errors.UserNotFoundError
+          },
+          '409': {
+            description: 'Existing User',
+            schema: SCHEMAS.Errors.ExistingUserError
+          },
+          '500': {
+            description: 'Internal Server Error',
+            schema: SCHEMAS.Errors.InternalServerError
+          }
+        }
+      }
+    },
+    tags: ['api'],
+    validate: {
+      headers: SCHEMAS.AuthorizationToken.unknown(),
+      params: {
+        userId: SCHEMAS.Uuid.userId
+      },
+      payload: SCHEMAS.User
+    }
+  }
+});
+
 module.exports = routes;

@@ -55,9 +55,8 @@ describe('Authentication resources', () => {
 
     before((done) => {
       const sampleUser = Object.assign({}, UserFixture, validPayload);
-      const sampleUserWithoutPassword = Object.assign({}, UserFixture, invalidPayload, {
-        password: ''
-      });
+      const sampleUserWithoutPassword = Object.assign({}, UserFixture, invalidPayload);
+      delete sampleUserWithoutPassword.password;
 
       Promise.props({
         user: User.createUser(sampleUser),
@@ -69,7 +68,6 @@ describe('Authentication resources', () => {
 
         return done();
       })
-
       .catch(done);
     });
 
@@ -79,7 +77,7 @@ describe('Authentication resources', () => {
       .catch(done);
     });
 
-    it('should return a newly created User when this endpoint is used correctly', (done) => {
+    it('should return a token and the User signing in when this endpoint is used correctly', (done) => {
       return callServer(validPayload, ({ result, statusCode, statusMessage }) => {
         expect(statusCode).to.equal(200);
         expect(statusMessage).to.equal('OK');
@@ -241,12 +239,12 @@ describe('Authentication resources', () => {
       }, test);
     }
 
-    it('should return a newly created User when this endpoint is used correctly', (done) => {
+    it('should return the authentication scope when this endpoint is used correctly', (done) => {
       return callServer(validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
         expect(statusCode).to.equal(200);
         expect(statusMessage).to.equal('OK');
         expect(result).to.equal({
-          users: ['create']
+          users: ['create', 'view', 'update']
         });
         return done();
       });
@@ -259,7 +257,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: ['create']
+            users: ['create', 'view', 'update']
           });
           return done();
         });
@@ -270,7 +268,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: []
+            users: ['view:self', 'update:self']
           });
           return done();
         });
@@ -281,7 +279,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: []
+            users: ['view:self', 'update:self']
           });
           return done();
         });
@@ -292,7 +290,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: []
+            users: ['view:self', 'update:self']
           });
           return done();
         });
@@ -303,7 +301,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: []
+            users: ['view:self', 'update:self']
           });
           return done();
         });

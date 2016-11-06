@@ -44,7 +44,7 @@ module.exports = {
         defaultValue: false
       },
       position: {
-        type: Sequelize.ENUM('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member'),
+        type: Sequelize.ENUM('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member', ''),
         allowNull: true
       },
       biography: {

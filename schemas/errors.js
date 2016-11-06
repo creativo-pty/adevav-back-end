@@ -29,14 +29,22 @@ function conflictError(message, label) {
   return boomError(409, 'Conflict', message, label);
 }
 
+function notFoundError(message, label) {
+  return boomError(404, 'Not Found', message, label);
+}
+
 // Application Errors
 Errors.AuthenticationError = boomError(401, 'Unauthorized', 'Invalid credentials', 'AuthenticationError');
 Errors.ForbiddenError = boomError(403, 'Forbidden', 'You are not allowed to use this resource.', 'ForbiddenError');
-Errors.InternalServerError = boomError(500, 'Internal Server Error', 'An uknown error has occured. Please try again later.', 'InternalServerError');
+Errors.InternalServerError = boomError(500, 'Internal Server Error', 'An unknown error has occured. Please try again later.', 'InternalServerError');
 
 // Bad Request Errors
 Errors.BadRequestLoginError = badRequestError('child "Password" fails because ["Password" is required]', 'BadRequestLoginError');
+Errors.BadRequestIdError = badRequestError('child "User ID" fails because ["User ID" must be a valid GUID]', 'BadRequestIdError');
 Errors.BadRequestUserError = badRequestError('child "Email Address" fails because ["Email Address" is required]', 'BadRequestUserError');
+
+// Not Found Errors
+Errors.UserNotFoundError = notFoundError('User not found', 'UserNotFoundError');
 
 // Conflict Errors
 Errors.ExistingUserError = conflictError('User already exist', 'ExistingUserError');
