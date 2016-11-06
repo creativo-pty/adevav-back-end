@@ -49,3 +49,58 @@ exports.createUser = function({ payload }, reply) {
   })
   .catch(this.helpers.errorHandler.bind(this, reply));
 };
+
+exports.getUser = function(request, reply) {
+
+  const { auth, params } = request;
+
+  return this.models.User.getUser(params.userId)
+  .then((user) => {
+    if (!user) {
+      return reply(Boom.notFound('User not found'));
+    }
+
+    if (!user.isPublic && request.isSelf() && auth.credentials.userId !== params.userId) {
+      return reply(Boom.forbidden('You are not allowed to use this resource.'));
+    }
+
+    return reply(Formatters.user(user)).code(200);
+  })
+  .catch(this.helpers.errorHandler.bind(this, reply));
+};
+
+exports.updateUser = function(request, reply) {
+
+  const { auth, params, payload } = request;
+
+  return this.models.User.getUser(params.userId)
+  .then((user) => {
+    if (!user) {
+      throw new Errors.UserNotFoundError();
+    }
+
+    if (payload.newPassword && !user.isValidPassword(payload.password)) {
+      throw new Errors.InvalidEmailPasswordError();
+    }
+
+    if (request.isSelf() && auth.credentials.userId !== params.userId) {
+      throw new Errors.ForbiddenError();
+    }
+
+    return user.updateUser(payload);
+  })
+  .then((user) => reply(Formatters.user(user)).code(200))
+  .catch(Errors.ExistingUserError, () => {
+    return reply(Boom.conflict('User already exist'));
+  })
+  .catch(Errors.ForbiddenError, () => {
+    return reply(Boom.forbidden('You are not allowed to use this resource.'));
+  })
+  .catch(Errors.InvalidEmailPasswordError, () => {
+    return reply(Boom.unauthorized('Password provided does not match with one on record'));
+  })
+  .catch(Errors.UserNotFoundError, () => {
+    return reply(Boom.notFound('User not found'));
+  })
+  .catch(this.helpers.errorHandler.bind(this, reply));
+};

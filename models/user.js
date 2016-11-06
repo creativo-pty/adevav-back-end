@@ -51,7 +51,7 @@ module.exports = function(db) {
       defaultValue: false
     },
     position: {
-      type: Sequelize.ENUM('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member'),
+      type: Sequelize.ENUM('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member', ''),
       allowNull: true
     },
     biography: {
@@ -113,6 +113,29 @@ module.exports = function(db) {
 
       isValidPassword: function(password) {
         return this.password && bcrypt.compareSync(password, this.password);
+      },
+
+      updateUser: function(userData) {
+        if (userData.newPassword) {
+          this.password = userData.newPassword;
+        }
+
+        this.email = userData.email;
+        this.firstName = userData.firstName;
+        this.lastName = userData.lastName;
+        this.role = userData.role;
+        this.isAssociate = userData.isAssociate;
+        this.position = userData.position;
+        this.biography = userData.biography;
+        this.isPublic = userData.isPublic;
+
+        return this.save()
+        .catch((err) => {
+          if (err.name === 'SequelizeUniqueConstraintError') {
+            throw new Errors.ExistingUserError();
+          }
+          throw err;
+        });
       }
     },
 
