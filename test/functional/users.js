@@ -102,6 +102,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal([{
             id: userInstance.id,
+            email: 'regular.member@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -119,6 +120,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal([{
             id: publicUserInstance.id,
+            email: 'public.associate@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -141,6 +143,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal([{
             id: userInstance.id,
+            email: 'regular.member@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -160,6 +163,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal([{
             id: adminUserInstance.id,
+            email: 'admin.user@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -167,6 +171,7 @@ describe('User resources', () => {
             isAssociate: false
           }, {
             id: publicUserInstance.id,
+            email: 'public.associate@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -177,6 +182,7 @@ describe('User resources', () => {
             isPublic: true
           }, {
             id: userInstance.id,
+            email: 'regular.member@example.com',
             firstName: '',
             lastName: '',
             avatar: '',
@@ -230,6 +236,7 @@ describe('User resources', () => {
         expect(statusMessage).to.equal('Created');
         expect(result).to.equal({
           id: result.id,
+          email: 'john.doe@example.com',
           firstName: 'John',
           lastName: 'Doe',
           avatar: '',
@@ -315,6 +322,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('Created');
           expect(result).to.equal({
             id: result.id,
+            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -513,6 +521,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -533,6 +542,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -553,6 +563,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: publicUserInstance.id,
+            email: 'public@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -578,6 +589,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -622,6 +634,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'john.doe@example.com',
             firstName: 'John',
             lastName: 'Doe',
             avatar: '',
@@ -805,6 +818,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'jane.doe@example.com',
             firstName: 'Jane',
             lastName: 'Doe',
             avatar: '',
@@ -824,6 +838,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'jane.doe@example.com',
             firstName: 'Jane',
             lastName: 'Doe',
             avatar: '',
@@ -848,6 +863,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'jane.doe@example.com',
             firstName: 'Jane',
             lastName: 'Doe',
             avatar: '',
@@ -872,6 +888,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'jane.doe@example.com',
             firstName: 'Jane',
             lastName: 'Doe',
             avatar: '',
@@ -972,6 +989,7 @@ describe('User resources', () => {
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
             id: userInstance.id,
+            email: 'jane.doe@example.com',
             firstName: 'Jane',
             lastName: 'Doe',
             avatar: '',
