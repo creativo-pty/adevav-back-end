@@ -245,6 +245,7 @@ describe('Authentication resources', () => {
         expect(statusCode).to.equal(200);
         expect(statusMessage).to.equal('OK');
         expect(result).to.equal({
+          posts: ['create'],
           users: ['create', 'view', 'update']
         });
         return done();
@@ -258,28 +259,19 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
+            posts: ['create'],
             users: ['create', 'view', 'update']
           });
           return done();
         });
       });
 
-      it('should return a 200 OK if the User is a Subscriber', (done) => {
-        return callServer(validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
+      it('should return a 200 OK if the User is a Editor', (done) => {
+        return callServer(validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            users: ['view:self', 'update:self']
-          });
-          return done();
-        });
-      });
-
-      it('should return a 200 OK if the User is a Contributor', (done) => {
-        return callServer(validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
-          expect(statusCode).to.equal(200);
-          expect(statusMessage).to.equal('OK');
-          expect(result).to.equal({
+            posts: ['create'],
             users: ['view:self', 'update:self']
           });
           return done();
@@ -291,17 +283,31 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
+            posts: ['create'],
             users: ['view:self', 'update:self']
           });
           return done();
         });
       });
 
-      it('should return a 200 OK if the User is a Editor', (done) => {
-        return callServer(validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
+      it('should return a 200 OK if the User is a Contributor', (done) => {
+        return callServer(validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
+            posts: ['create'],
+            users: ['view:self', 'update:self']
+          });
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is a Subscriber', (done) => {
+        return callServer(validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            posts: [],
             users: ['view:self', 'update:self']
           });
           return done();

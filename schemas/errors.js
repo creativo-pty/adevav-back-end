@@ -39,8 +39,9 @@ Errors.ForbiddenError = boomError(403, 'Forbidden', 'You are not allowed to use 
 Errors.InternalServerError = boomError(500, 'Internal Server Error', 'An unknown error has occured. Please try again later.', 'InternalServerError');
 
 // Bad Request Errors
-Errors.BadRequestLoginError = badRequestError('child "Password" fails because ["Password" is required]', 'BadRequestLoginError');
 Errors.BadRequestIdError = badRequestError('child "User ID" fails because ["User ID" must be a valid GUID]', 'BadRequestIdError');
+Errors.BadRequestLoginError = badRequestError('child "Password" fails because ["Password" is required]', 'BadRequestLoginError');
+Errors.BadRequestPostError = badRequestError('child "Title" fails because ["Title" is required]', 'BadRequestPostError');
 Errors.BadRequestUserError = badRequestError('child "Email Address" fails because ["Email Address" is required]', 'BadRequestUserError');
 
 // Not Found Errors

@@ -7,15 +7,7 @@ const Formatters = require('../lib/formatters');
 
 exports.listUsers = function({ headers }, reply) {
 
-  let authParts = [];
-
-  if (headers.authorization) {
-    authParts = headers.authorization.split(' ');
-  }
-
-  const token = (authParts.length === 2) ? authParts[1] : '';
-
-  return this.helpers.verifyJWT(token)
+  return this.helpers.extractTokenFromHeaders(headers)
   .then(({ sub }) => this.models.User.getUser(sub))
 
   .then((user) => {
