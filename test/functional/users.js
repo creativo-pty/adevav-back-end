@@ -3,6 +3,7 @@
 require('../testHelpers');
 
 const Promise = require('bluebird');
+
 // Remove unhandled promise errors from bluebird
 Promise.onPossiblyUnhandledRejection(() => {});
 
@@ -82,7 +83,6 @@ describe('User resources', () => {
 
         return done();
       })
-
       .catch(done);
     });
 
@@ -188,6 +188,156 @@ describe('User resources', () => {
             avatar: '',
             role: 'Subscriber',
             isAssociate: false
+          }]);
+
+          return done();
+        });
+      });
+    });
+
+    describe('user authorization', () => {
+
+      it('should return a 200 OK if the User is an Administrator', (done) => {
+        return callServer(validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Editor', (done) => {
+        return callServer(validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Author', (done) => {
+        return callServer(validTokens['Author'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Contributor', (done) => {
+        return callServer(validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Subscriber', (done) => {
+        return callServer(validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the token is missing', (done) => {
+        return callServer(null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
+          }]);
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the token is invalid', (done) => {
+        return callServer(invalidToken(), ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal([{
+            id: publicUserInstance.id,
+            email: 'public.associate@example.com',
+            firstName: '',
+            lastName: '',
+            avatar: '',
+            role: 'Editor',
+            isAssociate: true,
+            position: 'Secretary',
+            biography: '',
+            isPublic: true
           }]);
 
           return done();
@@ -369,21 +519,8 @@ describe('User resources', () => {
         });
       });
 
-      it('should return a 403 Forbidden if the User is a Subscriber', (done) => {
-        return callServer(validPayload, validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
-          expect(statusCode).to.equal(403);
-          expect(statusMessage).to.equal('Forbidden');
-          expect(result).to.equal({
-            statusCode: 403,
-            error: 'Forbidden',
-            message: 'You are not allowed to use this resource.'
-          });
-          return done();
-        });
-      });
-
-      it('should return a 403 Forbidden if the User is a Contributor', (done) => {
-        return callServer(validPayload, validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
+      it('should return a 403 Forbidden if the User is a Editor', (done) => {
+        return callServer(validPayload, validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(403);
           expect(statusMessage).to.equal('Forbidden');
           expect(result).to.equal({
@@ -408,8 +545,21 @@ describe('User resources', () => {
         });
       });
 
-      it('should return a 403 Forbidden if the User is a Editor', (done) => {
-        return callServer(validPayload, validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
+      it('should return a 403 Forbidden if the User is a Contributor', (done) => {
+        return callServer(validPayload, validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if the User is a Subscriber', (done) => {
+        return callServer(validPayload, validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
           expect(statusCode).to.equal(403);
           expect(statusMessage).to.equal('Forbidden');
           expect(result).to.equal({
@@ -446,7 +596,7 @@ describe('User resources', () => {
     });
 
     it('should return a 500 Internal Server Error if an unhandled error occurs', (done) => {
-      sinon.stub(User, 'create').returns(Promise.reject('Error in POST /users'));
+      sinon.stub(User, 'createUser').returns(Promise.reject('Error in POST /users'));
 
       return callServer(validPayload, validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
         expect(statusCode).to.equal(500);
@@ -457,7 +607,7 @@ describe('User resources', () => {
           message: 'An internal server error occurred'
         });
 
-        User.create.restore();
+        User.createUser.restore();
         return done();
       });
     });

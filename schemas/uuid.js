@@ -23,5 +23,6 @@ function uuidSchemasGenerator(objectNames) {
 }
 
 module.exports = uuidSchemasGenerator([
+  'post',
   'user'
 ]);

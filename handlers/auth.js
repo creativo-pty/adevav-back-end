@@ -43,7 +43,7 @@ exports.scope = function({ auth, policies }, reply) {
 
       const allowed = policies[resource][name].allow;
 
-      if (allowed.includes('*') || allowed.includes('all') || allowed.includes('any')) {
+      if (allowed.includes('*')) {
         allowedPolicies[resource].push(name);
         continue;
       }

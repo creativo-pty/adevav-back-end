@@ -2,9 +2,7 @@
 
 const Joi = require('joi');
 
-const {
-  userId: UserID
-} = require('./uuid');
+const { userId: UserID } = require('./uuid');
 
 module.exports = Joi.object().keys({
 
@@ -47,7 +45,7 @@ module.exports = Joi.object().keys({
     .example(true)
     .label('Is Associate'),
   position: Joi.string().allow('').optional()
-    .allow('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member', '')
+    .allow('President', 'Vice-President', 'Secretary', 'Sub-Secretary', 'Treasurer', 'Sub-Treasurer', 'Auditor', 'Vocal', 'Member')
     .default('')
     .description('Associate\'s position')
     .example('Member')

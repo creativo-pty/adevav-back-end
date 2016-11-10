@@ -7,7 +7,6 @@ module.exports = {
       // Basic User Properties
       id: {
         type: Sequelize.UUID,
-        defaultValue: Sequelize.UUIDV4,
         primaryKey: true
       },
       password: {
@@ -67,7 +66,7 @@ module.exports = {
     });
   },
 
-  down: function(action, Sequelize) {
+  down: function(action) {
 
     return action.dropTable('users');
   }
