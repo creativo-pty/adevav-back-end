@@ -142,7 +142,12 @@ module.exports = function(db) {
       },
 
       getPost: function(postId) {
-        return this.findById(postId);
+        return this.findById(postId, {
+          include: [{
+            model: this.sequelize.models.User,
+            as: 'author'
+          }]
+        });
       }
     },
 

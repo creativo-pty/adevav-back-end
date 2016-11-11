@@ -45,6 +45,7 @@ Errors.BadRequestPostError = badRequestError('child "Title" fails because ["Titl
 Errors.BadRequestUserError = badRequestError('child "Email Address" fails because ["Email Address" is required]', 'BadRequestUserError');
 
 // Not Found Errors
+Errors.PostNotFoundError = notFoundError('Post not found', 'PostNotFoundError');
 Errors.UserNotFoundError = notFoundError('User not found', 'UserNotFoundError');
 
 // Conflict Errors
