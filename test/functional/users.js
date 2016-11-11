@@ -881,7 +881,7 @@ describe('User resources', () => {
       });
     });
 
-    it('should return a 404 Not Found if the user was not found', (done) => {
+    it('should return a 404 Not Found if the User was not found', (done) => {
       return callServer('a8a05442-9ecd-4201-8183-b6730c086359', validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
         expect(statusCode).to.equal(404);
         expect(statusMessage).to.equal('Not Found');

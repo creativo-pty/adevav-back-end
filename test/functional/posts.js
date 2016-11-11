@@ -20,6 +20,37 @@ const server = Server.server;
 describe('Post resources', () => {
   let validTokens = [];
 
+  const sampleUser = {
+    email: 'user@example.com',
+    role: 'Administrator',
+    isAssociate: false
+  };
+  const sampleAdministrator = {
+    email: 'administrator@example.com',
+    role: 'Administrator',
+    isAssociate: false
+  };
+  const sampleEditor = {
+    email: 'editor@example.com',
+    role: 'Editor',
+    isAssociate: false
+  };
+  const sampleAuthor = {
+    email: 'author@example.com',
+    role: 'Author',
+    isAssociate: false
+  };
+  const sampleContributor = {
+    email: 'contributor@example.com',
+    role: 'Contributor',
+    isAssociate: false
+  };
+  const sampleSubscriber = {
+    email: 'subscriber@example.com',
+    role: 'Subscriber',
+    isAssociate: false
+  };
+
   before((done) => {
     Server.initialize()
     .then(() => {
@@ -28,12 +59,10 @@ describe('Post resources', () => {
 
       return logIn();
     })
-
     .then((tokens) => {
       validTokens = tokens;
       return done();
     })
-
     .catch(done);
   });
 
@@ -49,11 +78,6 @@ describe('Post resources', () => {
       slug: 'my-first-post',
       body: 'This is my first post.',
       status: 'Published'
-    };
-    const sampleUser = {
-      email: 'user@example.com',
-      role: 'Administrator',
-      isAssociate: false
     };
 
     function callServer(token, test) {
@@ -185,34 +209,13 @@ describe('Post resources', () => {
         let subscriberPostInstance;
 
         // Users by Role
-        let administratorUserInstance;
-        let editorUserInstance;
-        let authorUserInstance;
-        let contributorUserInstance;
-        let subscriberUserInstance;
+        let administratorInstance;
+        let editorInstance;
+        let authorInstance;
+        let contributorInstance;
+        let subscriberInstance;
 
         const instances = [];
-
-        const sampleAdministrator = Object.assign({}, sampleUser, {
-          email: 'administrator@example.com',
-          role: 'Administrator'
-        });
-        const sampleEditor = Object.assign({}, sampleUser, {
-          email: 'editor@example.com',
-          role: 'Editor'
-        });
-        const sampleAuthor = Object.assign({}, sampleUser, {
-          email: 'author@example.com',
-          role: 'Author'
-        });
-        const sampleContributor = Object.assign({}, sampleUser, {
-          email: 'contributor@example.com',
-          role: 'Contributor'
-        });
-        const sampleSubscriber = Object.assign({}, sampleUser, {
-          email: 'subscriber@example.com',
-          role: 'Subscriber'
-        });
 
         before((done) => {
           Promise.props({
@@ -223,11 +226,11 @@ describe('Post resources', () => {
             subscriber: User.createUser(sampleSubscriber)
           })
           .then(({ administrator, editor, author, contributor, subscriber }) => {
-            administratorUserInstance = administrator;
-            editorUserInstance = editor;
-            authorUserInstance = author;
-            contributorUserInstance = contributor;
-            subscriberUserInstance = subscriber;
+            administratorInstance = administrator;
+            editorInstance = editor;
+            authorInstance = author;
+            contributorInstance = contributor;
+            subscriberInstance = subscriber;
             instances.push(administrator, editor, author, contributor, subscriber);
 
             const sampleDraft = Object.assign({}, samplePost, {
@@ -283,7 +286,7 @@ describe('Post resources', () => {
         });
 
         it('should return a list of Posts visible to Administrator, Editor, Author, Contributor, Subscriber, and Public if the User is an Administrator', (done) => {
-          const token = createToken({ sub: administratorUserInstance.id });
+          const token = createToken({ sub: administratorInstance.id });
 
           return callServer(token, ({ result, statusCode, statusMessage }) => {
             expect(statusCode).to.equal(200);
@@ -397,7 +400,7 @@ describe('Post resources', () => {
         });
 
         it('should return a list of Posts visible to Editor, Author, Contributor, Subscriber, and Public if the User is an Editor', (done) => {
-          const token = createToken({ sub: editorUserInstance.id });
+          const token = createToken({ sub: editorInstance.id });
 
           return callServer(token, ({ result, statusCode, statusMessage }) => {
             expect(statusCode).to.equal(200);
@@ -494,7 +497,7 @@ describe('Post resources', () => {
         });
 
         it('should return a list of Posts visible to Author, Contributor, Subscriber, and Public if the User is an Author', (done) => {
-          const token = createToken({ sub: authorUserInstance.id });
+          const token = createToken({ sub: authorInstance.id });
 
           return callServer(token, ({ result, statusCode, statusMessage }) => {
             expect(statusCode).to.equal(200);
@@ -574,7 +577,7 @@ describe('Post resources', () => {
         });
 
         it('should return a list of Posts visible to Contributor, Subscriber, and Public if the User is an Contributor', (done) => {
-          const token = createToken({ sub: contributorUserInstance.id });
+          const token = createToken({ sub: contributorInstance.id });
 
           return callServer(token, ({ result, statusCode, statusMessage }) => {
             expect(statusCode).to.equal(200);
@@ -637,7 +640,7 @@ describe('Post resources', () => {
         });
 
         it('should return a list of Posts visible to Subscriber and Public if the User is an Subscriber', (done) => {
-          const token = createToken({ sub: subscriberUserInstance.id });
+          const token = createToken({ sub: subscriberInstance.id });
 
           return callServer(token, ({ result, statusCode, statusMessage }) => {
             expect(statusCode).to.equal(200);
@@ -926,17 +929,6 @@ describe('Post resources', () => {
     let contributorInstance;
 
     const instances = [];
-
-    const sampleAdministrator = {
-      email: 'administrator@example.com',
-      role: 'Administrator',
-      isAssociate: false
-    };
-    const sampleContributor = {
-      email: 'contributor@example.com',
-      role: 'Contributor',
-      isAssociate: false
-    };
 
     const validPayload = Object.assign({}, PostFixture, {
       status: 'Draft'
@@ -1257,17 +1249,6 @@ describe('Post resources', () => {
 
       const instances = [];
 
-      const sampleEditor = {
-        email: 'editor@example.com',
-        role: 'Editor',
-        isAssociate: false
-      };
-      const sampleAuthor = {
-        email: 'author@example.com',
-        role: 'Author',
-        isAssociate: false
-      };
-
       before((done) => {
         Promise.props({
           editor: User.createUser(sampleEditor),
@@ -1488,6 +1469,1391 @@ describe('Post resources', () => {
         });
 
         Post.createPost.restore();
+        return done();
+      });
+    });
+  });
+
+  describe('GET /posts/{postId}', () => {
+    let administratorPostInstance;
+    let editorPostInstance;
+    let authorPostInstance;
+    let contributorPostInstance;
+    let subscriberPostInstance;
+    let privatePostInstance;
+    let publicPostInstance;
+
+    let userInstance;
+    let administratorInstance;
+    let editorInstance;
+    let authorInstance;
+    let contributorInstance;
+    let subscriberInstance;
+
+    const instances = [];
+
+    function callServer(id, token, test) {
+      return server.inject({
+        method: 'GET',
+        url: `/posts/${id}`,
+        headers: {
+          'Authorization': token
+        }
+      }, test);
+    }
+
+    before((done) => {
+      Promise.props({
+        user: User.createUser(sampleUser),
+        administrator: User.createUser(sampleAdministrator),
+        editor: User.createUser(sampleEditor),
+        author: User.createUser(sampleAuthor),
+        contributor: User.createUser(sampleContributor),
+        subscriber: User.createUser(sampleSubscriber)
+      })
+      .then(({ user, administrator, editor, author, contributor, subscriber }) => {
+        userInstance = user;
+        administratorInstance = administrator;
+        editorInstance = editor;
+        authorInstance = author;
+        contributorInstance = contributor;
+        subscriberInstance = subscriber;
+        instances.push(user, administrator, editor, author, contributor, subscriber);
+
+        const samplePost = {
+          title: 'My First Post',
+          body: 'This is my first post.',
+          status: 'Draft',
+          authorId: user.id
+        };
+        const sampleAdministratorPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-administrator',
+          visibility: 'Administrator'
+        });
+        const sampleEditorPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-editor',
+          visibility: 'Editor'
+        });
+        const sampleAuthorPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-author',
+          visibility: 'Author'
+        });
+        const sampleContributorPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-contributor',
+          visibility: 'Contributor'
+        });
+        const sampleSubscriberPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-subscriber',
+          visibility: 'Subscriber'
+        });
+        const samplePrivatePost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-private',
+          visibility: 'Private'
+        });
+        const samplePublicPost = Object.assign({}, samplePost, {
+          slug: 'my-first-post-public',
+          visibility: 'Public'
+        });
+
+        return Promise.props({
+          administrator: Post.createPost(sampleAdministratorPost),
+          editor: Post.createPost(sampleEditorPost),
+          author: Post.createPost(sampleAuthorPost),
+          contributor: Post.createPost(sampleContributorPost),
+          subscriber: Post.createPost(sampleSubscriberPost),
+          privatePost: Post.createPost(samplePrivatePost),
+          publicPost: Post.createPost(samplePublicPost)
+        });
+      })
+      .then(({ administrator, editor, author, contributor, subscriber, privatePost, publicPost }) => {
+        administratorPostInstance = administrator;
+        editorPostInstance = editor;
+        authorPostInstance = author;
+        contributorPostInstance = contributor;
+        subscriberPostInstance = subscriber;
+        privatePostInstance = privatePost;
+        publicPostInstance = publicPost;
+        instances.push(administrator, editor, author, contributor, subscriber, privatePost, publicPost);
+
+        return done();
+      })
+      .catch(done);
+    });
+
+    after((done) => {
+      destroyAll(instances)
+      .then(() => done())
+      .catch(done);
+    });
+
+    describe('success', () => {
+
+      it('should return a Post when this endpoint is used correctly', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Private Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(privatePostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: privatePostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-private',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Private',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Administrator Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: administratorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-administrator',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Administrator',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Editor Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: editorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-editor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Editor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Author Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: authorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-author',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Author',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Contributor Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: contributorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-contributor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Contributor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User created that Post', (done) => {
+        const token = createToken({ sub: userInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Administrator Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: administratorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-administrator',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Administrator',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Editor Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: editorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-editor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Editor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Author Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: authorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-author',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Author',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Contributor Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: contributorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-contributor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Contributor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post if the User is an Administrator', (done) => {
+        const token = createToken({ sub: administratorInstance.id });
+
+        return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Editor Post if the User is an Editor', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: editorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-editor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Editor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Author Post if the User is an Editor', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: authorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-author',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Author',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Contributor Post if the User is an Editor', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: contributorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-contributor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Contributor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User is an Editor', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post if the User is an Editor', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return an Author Post if the User is an Author', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: authorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-author',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Author',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Contributor Post if the User is an Author', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: contributorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-contributor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Contributor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User is an Author', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post if the User is an Author', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Contributor Post if the User is a Contributor', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: contributorPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-contributor',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Contributor',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User is a Contributor', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post if the User is a Contributor', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Subscriber Post if the User is a Subscriber', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(subscriberPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: subscriberPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-subscriber',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Subscriber',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post if the User is a Subscriber', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a Public Post even if the User has not created that Post', (done) => {
+        return callServer(publicPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+    });
+
+    describe('user authorization', () => {
+
+      it('should return a 200 OK if the User is an Administrator', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Editor', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Editor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Author', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Author'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Contributor', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Contributor'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the User is an Subscriber', (done) => {
+        return callServer(publicPostInstance.id, validTokens['Subscriber'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the token is missing', (done) => {
+        return callServer(publicPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 200 OK if the token is invalid', (done) => {
+        return callServer(publicPostInstance.id, invalidToken(), ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(200);
+          expect(statusMessage).to.equal('OK');
+          expect(result).to.equal({
+            id: publicPostInstance.id,
+            title: 'My First Post',
+            slug: 'my-first-post-public',
+            body: 'This is my first post.',
+            status: 'Draft',
+            visibility: 'Public',
+            publishedOn: '',
+            author: {
+              id: userInstance.id,
+              email: 'user@example.com',
+              firstName: '',
+              lastName: '',
+              avatar: '',
+              role: 'Administrator',
+              isAssociate: false
+            }
+          });
+
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a User without a token tries to view an Administrator Post', (done) => {
+        return callServer(administratorPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a User without a token tries to view an Editor Post', (done) => {
+        return callServer(editorPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a User without a token tries to view an Author Post', (done) => {
+        return callServer(authorPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a User without a token tries to view an Contributor Post', (done) => {
+        return callServer(contributorPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a User without a token tries to view an Subscriber Post', (done) => {
+        return callServer(subscriberPostInstance.id, null, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if an Editor tries to view an Administrator Post', (done) => {
+        const token = createToken({ sub: editorInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if an Author tries to view an Administrator Post', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if an Author tries to view an Editor Post', (done) => {
+        const token = createToken({ sub: authorInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Contributor tries to view an Administrator Post', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Contributor tries to view an Editor Post', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Contributor tries to view an Author Post', (done) => {
+        const token = createToken({ sub: contributorInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Subscriber tries to view an Administrator Post', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(administratorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Subscriber tries to view an Editor Post', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(editorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Subscriber tries to view an Author Post', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(authorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+
+      it('should return a 403 Forbidden if a Subscriber tries to view a Contributor Post', (done) => {
+        const token = createToken({ sub: subscriberInstance.id });
+
+        return callServer(contributorPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(403);
+          expect(statusMessage).to.equal('Forbidden');
+          expect(result).to.equal({
+            statusCode: 403,
+            error: 'Forbidden',
+            message: 'You are not allowed to use this resource.'
+          });
+          return done();
+        });
+      });
+    });
+
+    describe('bad request', () => {
+
+      it('should return a 400 Bad Request if the ID provided is not a GUID', (done) => {
+        return callServer('not.a.uuid', validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+          expect(statusCode).to.equal(400);
+          expect(statusMessage).to.equal('Bad Request');
+          expect(result).to.equal({
+            statusCode: 400,
+            error: 'Bad Request',
+            message: 'child "Post ID" fails because ["Post ID" must be a valid GUID]',
+            validation: {
+              source: 'params',
+              keys: ['postId']
+            }
+          });
+
+          return done();
+        });
+      });
+    });
+
+    it('should return a 404 Not Found if the Post was not found', (done) => {
+      return callServer('7f0d58a4-a2b4-427c-b8bf-dcbcbafaf152', validTokens['Administrator'], ({ result, statusCode, statusMessage }) => {
+        expect(statusCode).to.equal(404);
+        expect(statusMessage).to.equal('Not Found');
+        expect(result).to.equal({
+          statusCode: 404,
+          error: 'Not Found',
+          message: 'Post not found'
+        });
+
+        return done();
+      });
+    });
+
+    it('should return a 500 Internal Server Error if an unhandled error occurs', (done) => {
+      sinon.stub(Post, 'getPost').returns(Promise.reject('Error in GET /posts/{postId}'));
+
+      const token = createToken({ sub: userInstance.id });
+
+      return callServer(publicPostInstance.id, token, ({ result, statusCode, statusMessage }) => {
+        expect(statusCode).to.equal(500);
+        expect(statusMessage).to.equal('Internal Server Error');
+        expect(result).to.equal({
+          statusCode: 500,
+          error: 'Internal Server Error',
+          message: 'An internal server error occurred'
+        });
+
+        Post.getPost.restore();
         return done();
       });
     });
