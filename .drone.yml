@@ -1,0 +1,25 @@
+build:
+  image: back-end:latest
+  environment:
+    - DB_USER=root
+    - DB_PASSWORD=adevav_2016test
+    - DB_HOST=127.0.0.1
+    - DB_NAME=adevav
+  commands:
+    - npm update npm -g
+    - npm install
+    - npm run coverage
+compose:
+  mysql:
+    image: 'mysql:5.5'
+    ports:
+      - '3306:3306'
+    environment:
+      - MYSQL_ROOT_PASSWORD=adevav_2016test
+      - MYSQL_DATABASE=adevav
+publish:
+  dockerhub:
+    token: f863df19-b902-43d1-974e-5c31600e3b85
+    repo: creativopty/adevav-back-end
+    when:
+      branch: [master, develop]
