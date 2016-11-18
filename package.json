@@ -54,7 +54,7 @@
     "path": "^0.12.7",
     "sequelize": "^3.24.1",
     "umzug": "^1.11.0",
-    "uuid": "^2.0.3",
+    "uuid": "^3.0.0",
     "vision": "^4.1.0"
   },
   "devDependencies": {
