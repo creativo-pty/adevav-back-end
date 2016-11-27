@@ -6,7 +6,7 @@ const Lab = require('lab');
 const moment = require('moment');
 const Promise = require('bluebird');
 const sinon = require('sinon');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 const lab = exports.lab = Lab.script();
 
