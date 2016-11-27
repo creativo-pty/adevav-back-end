@@ -2,7 +2,7 @@
 
 const _ = require('lodash');
 const Joi = require('joi');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 function uuidSchemaGenerator(objectName) {
   const name = _.startCase(objectName);
