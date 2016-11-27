@@ -3,7 +3,7 @@
 module.exports = {
   up: function(action, Sequelize) {
 
-    action.createTable('users', {
+    return action.createTable('users', {
       // Basic User Properties
       id: {
         type: Sequelize.UUID,
@@ -69,6 +69,6 @@ module.exports = {
 
   down: function(action, Sequelize) {
 
-    action.dropTable('users');
+    return action.dropTable('users');
   }
 };
