@@ -43,7 +43,7 @@
     "error-factory": "^0.1.6",
     "fs": "0.0.2",
     "hapi": "^15.0.3",
-    "hapi-auth-jwt2": "^7.1.3",
+    "hapi-auth-jwt2": "^7.2.4",
     "hapi-swagger": "^7.2.0",
     "inert": "^4.0.3",
     "joi": "^10.0.1",
