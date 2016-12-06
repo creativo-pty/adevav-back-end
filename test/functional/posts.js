@@ -18,6 +18,8 @@ exports.lab = Lab.script();
 const server = Server.server;
 
 describe('Post resources', () => {
+  let fakeClock;
+
   let validTokens = [];
 
   const sampleUser = {
@@ -52,6 +54,8 @@ describe('Post resources', () => {
   };
 
   before((done) => {
+    fakeClock = sinon.useFakeTimers('Date');
+
     Server.initialize()
     .then(() => {
       Post = server.models.Post;
@@ -64,6 +68,11 @@ describe('Post resources', () => {
       return done();
     })
     .catch(done);
+  });
+
+  after((done) => {
+    fakeClock.restore();
+    return done();
   });
 
   describe('GET /posts', () => {

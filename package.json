@@ -9,7 +9,7 @@
     "coverage:open": "scripts/open_coverage",
     "docker:bash": "docker exec -it `docker ps | grep server_server | awk '{print $1}'` bash",
     "docker:kill": "npm run docker:stop && npm run docker:rm",
-    "docker:rm": "docker-compose -f docker-compose.yml rm",
+    "docker:rm": "docker-compose -f docker-compose.yml rm -f",
     "docker:start": "docker-compose -f docker-compose.yml up -d",
     "docker:stop": "docker-compose -f docker-compose.yml kill",
     "docker:update": "docker pull creativopty/adevav-front-end; docker pull mysql:5.7.16",
