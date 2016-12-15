@@ -245,7 +245,7 @@ describe('Authentication resources', () => {
         expect(statusCode).to.equal(200);
         expect(statusMessage).to.equal('OK');
         expect(result).to.equal({
-          posts: ['create'],
+          posts: ['create', 'update'],
           users: ['create', 'view', 'update']
         });
         return done();
@@ -259,7 +259,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            posts: ['create'],
+            posts: ['create', 'update'],
             users: ['create', 'view', 'update']
           });
           return done();
@@ -271,7 +271,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            posts: ['create'],
+            posts: ['create', 'update'],
             users: ['view:self', 'update:self']
           });
           return done();
@@ -283,7 +283,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            posts: ['create'],
+            posts: ['create', 'update:self'],
             users: ['view:self', 'update:self']
           });
           return done();
@@ -295,7 +295,7 @@ describe('Authentication resources', () => {
           expect(statusCode).to.equal(200);
           expect(statusMessage).to.equal('OK');
           expect(result).to.equal({
-            posts: ['create'],
+            posts: ['create', 'update:self'],
             users: ['view:self', 'update:self']
           });
           return done();
