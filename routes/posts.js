@@ -134,4 +134,60 @@ routes.push({
   }
 });
 
+// PUT /posts/{postId}
+routes.push({
+  method: 'PUT',
+  path: API_BASE_PATH + '/{postId}',
+  config: {
+    auth: 'jwt',
+    handler: Posts.updatePost,
+    description: 'Update post by ID',
+    notes: 'Update a post in the system according to their ID',
+    plugins: {
+      'policy': {
+        resource: 'posts',
+        name: 'update',
+        allow: ['Administrator', 'Editor', 'self'],
+        deny: 'Subscriber'
+      },
+      'hapi-swagger': {
+        responses: {
+          '201': {
+            description: 'Created',
+            schema: SCHEMAS.Post
+          },
+          '400': {
+            description: 'Bad Request',
+            schema: SCHEMAS.Errors.BadRequestPostError
+          },
+          '401': {
+            description: 'Unauthorized',
+            schema: SCHEMAS.Errors.AuthenticationError
+          },
+          '403': {
+            description: 'Forbidden',
+            schema: SCHEMAS.Errors.ForbiddenError
+          },
+          '404': {
+            description: 'Not Found',
+            schema: SCHEMAS.Errors.PostNotFoundError
+          },
+          '500': {
+            description: 'Internal Server Error',
+            schema: SCHEMAS.Errors.InternalServerError
+          }
+        }
+      }
+    },
+    tags: ['api'],
+    validate: {
+      headers: SCHEMAS.AuthorizationToken.unknown(),
+      params: {
+        postId: SCHEMAS.Uuid.postId
+      },
+      payload: SCHEMAS.Post
+    }
+  }
+});
+
 module.exports = routes;
