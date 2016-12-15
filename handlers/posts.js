@@ -32,7 +32,7 @@ exports.createPost = function({ auth, payload }, reply) {
     const cannotPublish = user.role === 'Contributor';
 
     if (isPublished && cannotPublish) {
-      throw new Errors.BadRequestError();
+      throw new Errors.ForbiddenError();
     }
 
     payload.authorId = user.id;
@@ -43,9 +43,6 @@ exports.createPost = function({ auth, payload }, reply) {
     return reply(Formatters.post(post)).code(201);
   })
 
-  .catch(Errors.BadRequestError, () => {
-    return reply(Boom.badRequest('You are not allowed to publish posts'));
-  })
   .catch(Errors.ForbiddenError, () => {
     return reply(Boom.forbidden('You are not allowed to use this resource.'));
   })
@@ -69,6 +66,54 @@ exports.getPost = function({ headers, params }, reply) {
     }
 
     return reply(Formatters.post(post)).code(200);
+  })
+  .catch(this.helpers.errorHandler.bind(this, reply));
+};
+
+exports.updatePost = function(request, reply) {
+
+  const { auth, params, payload } = request;
+
+  return this.models.Post.getPost(params.postId)
+  .then((post) => {
+    if (!post) {
+      throw new Errors.PostNotFoundError();
+    }
+
+    const notTheAuthor = auth.credentials.userId !== post.authorId;
+
+    if (request.isSelf() && notTheAuthor) {
+      throw new Errors.ForbiddenError();
+    }
+
+    const isPublished = payload.status === 'Published';
+    const cannotPublish = auth.credentials.role === 'Contributor';
+
+    if (cannotPublish && isPublished) {
+      throw new Errors.ForbiddenError();
+    }
+
+    const checkForExistingSlugs = (payload.slug) && (payload.slug !== post.slug);
+
+    return Promise.props({
+      post,
+      postsWithSlugs: (checkForExistingSlugs) ? this.models.Post.listPostsBySlug(payload.slug) : Promise.resolve([])
+    });
+  })
+  .then(({ post, postsWithSlugs }) => {
+    if (postsWithSlugs.length) {
+      payload.slug += '-' + postsWithSlugs.length;
+    }
+
+    return post.updatePost(payload);
+  })
+  .then((post) => reply(Formatters.post(post)).code(201))
+
+  .catch(Errors.ForbiddenError, () => {
+    return reply(Boom.forbidden('You are not allowed to use this resource.'));
+  })
+  .catch(Errors.PostNotFoundError, () => {
+    return reply(Boom.notFound('Post not found'));
   })
   .catch(this.helpers.errorHandler.bind(this, reply));
 };

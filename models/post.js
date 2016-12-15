@@ -151,6 +151,25 @@ module.exports = function(db) {
       }
     },
 
+    instanceMethods: {
+      updatePost: function(postData) {
+        this.title = postData.title;
+        this.slug = postData.slug || this.slug;
+        this.body = postData.body;
+        this.visibility = postData.visibility;
+
+        if (this.status !== 'Published' && postData.status === 'Published') {
+          this.publishedOn = moment().format();
+        } else if (this.status === 'Published' && postData.status !== 'Published') {
+          this.publishedOn = null;
+        }
+
+        this.status = postData.status;
+
+        return this.save();
+      }
+    },
+
     tableName: 'posts'
   });
 
