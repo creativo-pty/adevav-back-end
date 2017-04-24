@@ -26,7 +26,11 @@ if (program.up) {
   return process.exit(0);
 }
 
-const params = (program.to) ? {to: program.to} : null;
+let params;
+
+if (program.to) {
+  params = (program.to === '0') ? { to: 0 } : { to: program.to };
+}
 
 return action.call(migration, params)
 .then((migrations) => {
