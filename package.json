@@ -40,7 +40,7 @@
   "dependencies": {
     "bcryptjs": "^2.3.0",
     "bluebird": "^3.4.6",
-    "boom": "^4.0.0",
+    "boom": "^5.0.0",
     "bunyan": "^1.8.1",
     "commander": "^2.9.0",
     "error-factory": "^0.1.6",
